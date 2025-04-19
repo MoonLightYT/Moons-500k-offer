@@ -13,17 +13,112 @@ local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "0" }),
 }
 
--- Fixed: Use "Main" to refer to the correct tab
+local running = false -- to track the toggle state
+
 local Toggle = Tabs.Main:AddToggle("MyToggle", 
 {
     Title = "Toggle", 
     Description = "Toggle description",
     Default = false,
     Callback = function(state)
+        running = state -- Update the running state
         if state then
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/0o0o0o0o0o0o0o0o0o0o0o0o/0o0o0o0o/refs/heads/main/Kk"))()
+            print("Toggle On") -- Optional: Log toggle state
+            local replicatedStorage = game:GetService("ReplicatedStorage")
+            local players = game:GetService("Players")
+            local localPlayer = players.LocalPlayer
+            
+            local function unequipAllPets()
+                local petsFolder = localPlayer.petsFolder
+                for _, petFolder in pairs(petsFolder:GetChildren()) do
+                    if petFolder:IsA("Folder") then
+                        for _, pet in pairs(petFolder:GetChildren()) do
+                            replicatedStorage.rEvents.equipPetEvent:FireServer("unequipPet", pet)
+                        end
+                    end
+                end
+                task.wait(0.1)
+            end
+            
+            local function equipPetByName(petName)
+                unequipAllPets()
+                task.wait(0.01)
+                for _, pet in pairs(localPlayer.petsFolder.Unique:GetChildren()) do
+                    if pet.Name == petName then
+                        replicatedStorage.rEvents.equipPetEvent:FireServer("equipPet", pet)
+                    end
+                end
+            end
+            
+            local function findMachine(machineName)
+                local machine = workspace.machinesFolder:FindFirstChild(machineName)
+                if not machine then
+                    for _, folder in pairs(workspace:GetChildren()) do
+                        if folder:IsA("Folder") and folder.Name:find("machines") then
+                            machine = folder:FindFirstChild(machineName)
+                            if machine then
+                                break
+                            end
+                        end
+                    end
+                end
+                return machine
+            end
+            
+            local function simulateKeyPress()
+                local virtualInputManager = game:GetService("VirtualInputManager")
+                virtualInputManager:SendKeyEvent(true, "E", false, game)
+                task.wait(0.1)
+                virtualInputManager:SendKeyEvent(false, "E", false, game)
+            end
+            
+            task.spawn(function()
+                while running do -- Check the running state
+                    local rebirths = localPlayer.leaderstats.Rebirths.Value
+                    local strengthThreshold = 10000 + (5000 * rebirths)
+                    
+                    if localPlayer.ultimatesFolder:FindFirstChild("Golden Rebirth") then
+                        local goldenRebirthValue = localPlayer.ultimatesFolder["Golden Rebirth"].Value
+                        strengthThreshold = math.floor(strengthThreshold * (1 - (goldenRebirthValue * 0.1)))
+                    end
+                    
+                    unequipAllPets()
+                    task.wait(0.1)
+                    equipPetByName("Swift Samurai")
+                    
+                    while running and localPlayer.leaderstats.Strength.Value < strengthThreshold do
+                        for _ = 1, 10 do
+                            localPlayer.muscleEvent:FireServer("rep")
+                        end
+                        task.wait()
+                    end
+                    
+                    unequipAllPets()
+                    task.wait(0.1)
+                    equipPetByName("Tribal Overlord")
+                    
+                    local jungleBarLift = findMachine("Jungle Bar Lift")
+                    if jungleBarLift and jungleBarLift:FindFirstChild("interactSeat") then
+                        localPlayer.Character.HumanoidRootPart.CFrame = jungleBarLift.interactSeat.CFrame * CFrame.new(0, 3, 0)
+                        repeat
+                            task.wait(0.1)
+                            simulateKeyPress()
+                        until localPlayer.Character.Humanoid.Sit
+                    end
+                    
+                    local initialRebirths = localPlayer.leaderstats.Rebirths.Value
+                    repeat
+                        replicatedStorage.rEvents.rebirthRemote:InvokeServer("rebirthRequest")
+                        task.wait(0.1)
+                    until localPlayer.leaderstats.Rebirths.Value > initialRebirths
+                    
+                    task.wait()
+                end
+                print("Toggle Off") -- Optional: Log when toggle is off
+            end)
         else
-            print("Toggle Off")
+            running = false -- Set to false when the toggle is off
+            print("Toggle Off") -- Just a message
         end
     end 
 })
