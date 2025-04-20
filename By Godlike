@@ -413,3 +413,4 @@ folder4:AddSwitch("Hide all frames", function(State)
         end
     end
 end)
+ThankYou:AddLabel("Fast Glitching below")
