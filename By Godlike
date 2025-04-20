@@ -1,4 +1,3 @@
-
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/memejames/elerium-v2-ui-library/main/Library", true))()
 
 local window = library:AddWindow("Moons 500k offer", {
@@ -7,11 +6,11 @@ local window = library:AddWindow("Moons 500k offer", {
     can_resize = false,
 })
 
-local ThankYou = window:AddTab("Thank You") 
-local folder = ThankYou:AddFolder("Misc shit")
+local ThankYou = window:AddTab("Thank You")
+local folder = ThankYou:AddFolder("Misc stuff")
 
 folder:AddSwitch("Auto Brawl", function(State)
-    autobrawl = State 
+    local autobrawl = State
     if autobrawl then
         task.spawn(function()
             while autobrawl do 
@@ -23,7 +22,7 @@ folder:AddSwitch("Auto Brawl", function(State)
 end)
 
 folder:AddSwitch("Auto Brawl GOD", function(State)
-    autobrawlgod = State 
+    local autobrawlgod = State 
     if autobrawlgod then
         task.spawn(function()
             while autobrawlgod do 
@@ -35,35 +34,35 @@ folder:AddSwitch("Auto Brawl GOD", function(State)
 end)
 
 folder:AddSwitch("Fast Tools", function(State)
-    fasttools = State 
-    if fasttools then
-        _G.FastTools = fasttools 
-        local defaultSpeeds = {
-            {"Punch", "attackTime", fasttools and 0 or 0.35},
-            {"Ground Slam", "attackTime", fasttools and 0 or 6},
-            {"Stomp", "attackTime", fasttools and 0 or 7},
-            {"Handstands", "repTime", fasttools and 0 or 1},
-            {"Pushups", "repTime", fasttools and 0 or 1},
-            {"Weight", "repTime", fasttools and 0 or 1},
-            {"Situps", "repTime", fasttools and 0 or 1}
-        }
-        local player = game.Players.LocalPlayer
-        local backpack = player:WaitForChild("Backpack")
-        for _, toolInfo in ipairs(defaultSpeeds) do
-            local tool = backpack:FindFirstChild(toolInfo[1])
-            if tool and tool:FindFirstChild(toolInfo[2]) then
-                tool[toolInfo[2]].Value = toolInfo[3]
-            end
-            local equippedTool = player.Character and player.Character:FindFirstChild(toolInfo[1])
-            if equippedTool and equippedTool:FindFirstChild(toolInfo[2]) then
-                equippedTool[toolInfo[2]].Value = toolInfo[3]
-            end
+    local fasttools = State 
+    _G.FastTools = fasttools
+    local defaultSpeeds = {
+        {"Punch", "attackTime", fasttools and 0 or 0.35},
+        {"Ground Slam", "attackTime", fasttools and 0 or 6},
+        {"Stomp", "attackTime", fasttools and 0 or 7},
+        {"Handstands", "repTime", fasttools and 0 or 1},
+        {"Pushups", "repTime", fasttools and 0 or 1},
+        {"Weight", "repTime", fasttools and 0 or 1},
+        {"Situps", "repTime", fasttools and 0 or 1}
+    }
+    
+    local player = game.Players.LocalPlayer
+    local backpack = player:WaitForChild("Backpack")
+    
+    for _, toolInfo in ipairs(defaultSpeeds) do
+        local tool = backpack:FindFirstChild(toolInfo[1])
+        if tool and tool:FindFirstChild(toolInfo[2]) then
+            tool[toolInfo[2]].Value = toolInfo[3]
+        end
+        local equippedTool = player.Character and player.Character:FindFirstChild(toolInfo[1])
+        if equippedTool and equippedTool:FindFirstChild(toolInfo[2]) then
+            equippedTool[toolInfo[2]].Value = toolInfo[3]
         end
     end
 end)
 
 folder:AddSwitch("Free Autolift pass", function(State)
-    freeautoliftgamepass = State 
+    local freeautoliftgamepass = State 
     if freeautoliftgamepass then
         local gamepassFolder = game:GetService("ReplicatedStorage").gamepassIds
         local player = game:GetService("Players").LocalPlayer
@@ -79,21 +78,14 @@ end)
 local folder2 = ThankYou:AddFolder("Auto Lift stuff")
 
 folder2:AddSwitch("Auto Weight", function(State)
-    autoweight = State 
+    local autoweight = State 
+    _G.AutoWeight = autoweight 
     if autoweight then
-        _G.AutoWeight = autoweight 
-        if autoweight then
-            local weightTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Weight")
-            if weightTool then
-                game.Players.LocalPlayer.Character.Humanoid:EquipTool(weightTool)
-            end
-        else
-            local character = game.Players.LocalPlayer.Character
-            local equipped = character:FindFirstChild("Weight")
-            if equipped then
-                equipped.Parent = game.Players.LocalPlayer.Backpack
-            end
+        local weightTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Weight")
+        if weightTool then
+            game.Players.LocalPlayer.Character.Humanoid:EquipTool(weightTool)
         end
+        
         while _G.AutoWeight do
             game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
             task.wait(0.001)
@@ -102,21 +94,14 @@ folder2:AddSwitch("Auto Weight", function(State)
 end)
 
 folder2:AddSwitch("Auto Pushups", function(State)
-    autopushups = State 
+    local autopushups = State 
+    _G.AutoPushups = autopushups 
     if autopushups then
-        _G.AutoPushups = autopushups 
-        if autopushups then
-            local pushupsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Pushups")
-            if pushupsTool then
-                game.Players.LocalPlayer.Character.Humanoid:EquipTool(pushupsTool)
-            end
-        else
-            local character = game.Players.LocalPlayer.Character
-            local equipped = character:FindFirstChild("Pushups")
-            if equipped then
-                equipped.Parent = game.Players.LocalPlayer.Backpack
-            end
+        local pushupsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Pushups")
+        if pushupsTool then
+            game.Players.LocalPlayer.Character.Humanoid:EquipTool(pushupsTool)
         end
+        
         while _G.AutoPushups do
             game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
             task.wait(0.001)
@@ -125,21 +110,14 @@ folder2:AddSwitch("Auto Pushups", function(State)
 end)
 
 folder2:AddSwitch("Auto Situps", function(State)
-    autositups = State 
+    local autositups = State 
+    _G.AutoSitups = autositups 
     if autositups then
-        _G.AutoSitups = autositups 
-        if autositups then
-            local situpsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Situps")
-            if situpsTool then
-                game.Players.LocalPlayer.Character.Humanoid:EquipTool(situpsTool)
-            end
-        else
-            local character = game.Players.LocalPlayer.Character
-            local equipped = character:FindFirstChild("Situps")
-            if equipped then
-                equipped.Parent = game.Players.LocalPlayer.Backpack
-            end
+        local situpsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Situps")
+        if situpsTool then
+            game.Players.LocalPlayer.Character.Humanoid:EquipTool(situpsTool)
         end
+        
         while _G.AutoSitups do
             game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
             task.wait(0.001)
@@ -148,21 +126,14 @@ folder2:AddSwitch("Auto Situps", function(State)
 end)
 
 folder2:AddSwitch("Auto Handstands", function(State)
-    autohandstands = State 
+    local autohandstands = State 
+    _G.AutoHandstands = autohandstands 
     if autohandstands then
-        _G.AutoHandstands = autohandstands 
-        if autohandstands then
-            local handstandsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Handstands")
-            if handstandsTool then
-                game.Players.LocalPlayer.Character.Humanoid:EquipTool(handstandsTool)
-            end
-        else
-            local character = game.Players.LocalPlayer.Character
-            local equipped = character:FindFirstChild("Handstands")
-            if equipped then
-                equipped.Parent = game.Players.LocalPlayer.Backpack
-            end
+        local handstandsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Handstands")
+        if handstandsTool then
+            game.Players.LocalPlayer.Character.Humanoid:EquipTool(handstandsTool)
         end
+        
         while _G.AutoHandstands do
             game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
             task.wait(0.001)
@@ -173,7 +144,7 @@ end)
 local folder3 = ThankYou:AddFolder("Misc V1")
 
 folder3:AddSwitch("Auto Claim Rewards", function(State)
-    autoclaimrewards = State
+    local autoclaimrewards = State
     if autoclaimrewards then
         while autoclaimrewards do
             for i = 1, 8 do
@@ -185,7 +156,7 @@ folder3:AddSwitch("Auto Claim Rewards", function(State)
 end)
 
 folder3:AddSwitch("Auto Spin Wheel", function(State)
-    autospinwheel = State
+    local autospinwheel = State
     if autospinwheel then
         while autospinwheel do
             game:GetService("ReplicatedStorage").rEvents.openFortuneWheelRemote:InvokeServer("openFortuneWheel", game:GetService("ReplicatedStorage").fortuneWheelChances["Fortune Wheel"])
@@ -195,7 +166,7 @@ folder3:AddSwitch("Auto Spin Wheel", function(State)
 end)
 
 folder3:AddSwitch("Infinite Jump", function(State)
-    infinitejump = State
+    local infinitejump = State
     if infinitejump then
         _G.InfiniteJump = infinitejump
         local Player = game:GetService('Players').LocalPlayer
@@ -209,11 +180,12 @@ folder3:AddSwitch("Infinite Jump", function(State)
 end)
 
 folder3:AddSwitch("NoClip", function(State)
-    noclip = State
+    local noclip = State
     if noclip then
         local RunService = game:GetService("RunService")
         local Players = game:GetService("Players")
         local LocalPlayer = Players.LocalPlayer
+        
         getgenv().noclipConnection = RunService.Stepped:Connect(function()
             for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
                 if part:IsA("BasePart") then
@@ -229,7 +201,7 @@ folder3:AddSwitch("NoClip", function(State)
 end)
 
 folder3:AddSwitch("Destroy Ad portal", function(State)
-    destroyadportal = State
+    local destroyadportal = State
     if destroyadportal then
         for _, portal in pairs(game:GetDescendants()) do
             if portal.Name == "RobloxForwardPortals" then
@@ -244,14 +216,13 @@ folder3:AddSwitch("Destroy Ad portal", function(State)
     end
 end)
 
-folder3:AddSwitch("Anti Afk", function(State)
+folder3:AddSwitch("Anti AFK", function(State)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/evxncodes/mainroblox/main/anti-afk", true))()
 end)
 
 folder3:AddSwitch("Mystery Function", function(State)
-    mysteryfunction = State
+    local mysteryfunction = State
     if mysteryfunction then
-        -- Assuming v is intended to be the variable for state management
         getgenv().killNearby = true 
         local radiusVisual = Instance.new("Part")
         radiusVisual.Anchored = true
@@ -260,6 +231,7 @@ folder3:AddSwitch("Mystery Function", function(State)
         radiusVisual.Material = Enum.Material.ForceField
         radiusVisual.Color = Color3.fromRGB(0, 255, 0)
         radiusVisual.Size = Vector3.new(1, 0.1, 1)
+
         task.spawn(function()
             while getgenv().killNearby do
                 pcall(function()
@@ -267,15 +239,15 @@ folder3:AddSwitch("Mystery Function", function(State)
                     local myRoot = myCharacter and myCharacter:FindFirstChild("HumanoidRootPart")
                     if myRoot then
                         radiusVisual.Parent = workspace
+                        local currentRadius = 10 -- Set a default radius
                         radiusVisual.Size = Vector3.new(currentRadius * 2, 0.1, currentRadius * 2)
                         radiusVisual.CFrame = myRoot.CFrame * CFrame.new(0, -2, 0)
-                        -- Assuming createParticles is defined elsewhere
-                        local effects = createParticles(myRoot) 
+                        local effects = {} -- Placeholder for createParticles function
                         for _, player in pairs(game:GetService("Players"):GetPlayers()) do
-                            if player ~= game.Players.LocalPlayer and not whitelist[player.Name] then
+                            if player ~= game.Players.LocalPlayer then
                                 local char = player.Character
                                 local root = char and char:FindFirstChild("HumanoidRootPart")
-                                if root and myRoot and myCharacter:FindFirstChild("LeftHand") then
+                                if root and myRoot then
                                     local distance = (root.Position - myRoot.Position).Magnitude
                                     if distance <= currentRadius then
                                         local killEffect = Instance.new("Part")
@@ -292,11 +264,11 @@ folder3:AddSwitch("Mystery Function", function(State)
                                             Transparency = 1
                                         }):Play()
                                         game:GetService("Debris"):AddItem(killEffect, 0.5)
+
                                         firetouchinterest(root, myCharacter.LeftHand, 0)
                                         task.wait()
                                         firetouchinterest(root, myCharacter.LeftHand, 1)
                                         -- Assuming gettool is defined elsewhere
-                                        gettool() 
                                     end
                                 end
                             end
@@ -311,5 +283,133 @@ folder3:AddSwitch("Mystery Function", function(State)
             end
             radiusVisual:Destroy()
         end)
+    end
+end)
+
+ThankYou:AddLabel("----OP Tools----")
+local folder4 = ThankYou:AddFolder("Thx for 500K account bro")
+
+folder4:AddSwitch("Fast Rebirth", function(State)
+    local fastrebirth = State
+    if fastrebirth then
+        local replicatedStorage = game:GetService("ReplicatedStorage")
+        local players = game:GetService("Players")
+        local localPlayer = players.LocalPlayer
+
+        local function unequipAllPets()
+            local petsFolder = localPlayer.petsFolder
+            for _, petFolder in pairs(petsFolder:GetChildren()) do
+                if petFolder:IsA("Folder") then
+                    for _, pet in pairs(petFolder:GetChildren()) do
+                        replicatedStorage.rEvents.equipPetEvent:FireServer("unequipPet", pet)
+                    end
+                end
+            end
+            task.wait(0.1)
+        end
+
+        local function equipPetByName(petName)
+            unequipAllPets()
+            task.wait(0.01)
+            for _, pet in pairs(localPlayer.petsFolder.Unique:GetChildren()) do
+                if pet.Name == petName then
+                    replicatedStorage.rEvents.equipPetEvent:FireServer("equipPet", pet)
+                end
+            end
+        end
+
+        local function findMachine(machineName)
+            local machine = workspace.machinesFolder:FindFirstChild(machineName)
+            if not machine then
+                for _, folder in pairs(workspace:GetChildren()) do
+                    if folder:IsA("Folder") and folder.Name:find("machines") then
+                        machine = folder:FindFirstChild(machineName)
+                        if machine then
+                            break
+                        end
+                    end
+                end
+            end
+            return machine
+        end
+
+        local function simulateKeyPress()
+            local virtualInputManager = game:GetService("VirtualInputManager")
+            virtualInputManager:SendKeyEvent(true, "E", false, game)
+            task.wait(0.1)
+            virtualInputManager:SendKeyEvent(false, "E", false, game)
+        end
+
+        task.spawn(function()
+            while true do
+                local rebirths = localPlayer.leaderstats.Rebirths.Value
+                local strengthThreshold = 10000 + (5000 * rebirths)
+
+                if localPlayer.ultimatesFolder:FindFirstChild("Golden Rebirth") then
+                    local goldenRebirthValue = localPlayer.ultimatesFolder["Golden Rebirth"].Value
+                    strengthThreshold = math.floor(strengthThreshold * (1 - (goldenRebirthValue * 0.1)))
+                end
+
+                unequipAllPets()
+                task.wait(0.1)
+                equipPetByName("Swift Samurai")
+
+                while localPlayer.leaderstats.Strength.Value < strengthThreshold do
+                    for _ = 1, 10 do
+                        localPlayer.muscleEvent:FireServer("rep")
+                    end
+                    task.wait()
+                end
+
+                unequipAllPets()
+                task.wait(0.1)
+                equipPetByName("Tribal Overlord")
+
+                local jungleBarLift = findMachine("Jungle Bar Lift")
+                if jungleBarLift and jungleBarLift:FindFirstChild("interactSeat") then
+                    localPlayer.Character.HumanoidRootPart.CFrame = jungleBarLift.interactSeat.CFrame * CFrame.new(0, 3, 0)
+                    repeat
+                        task.wait(0.1)
+                        simulateKeyPress()
+                    until localPlayer.Character.Humanoid.Sit
+                end
+
+                local initialRebirths = localPlayer.leaderstats.Rebirths.Value
+                repeat
+                    replicatedStorage.rEvents.rebirthRemote:InvokeServer("rebirthRequest")
+                    task.wait(0.1)
+                until localPlayer.leaderstats.Rebirths.Value > initialRebirths
+
+                task.wait()
+            end
+        end)
+    end
+end)
+
+folder4:AddSwitch("Speed Grind", function(State)
+    local speedgrind = State
+    if speedgrind then
+        local isGrinding = true
+
+        for i = 1, 12 do
+            task.spawn(function()
+                while isGrinding do
+                    game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+                    task.wait(0.083) 
+                end
+            end)
+        end
+    end
+end)
+
+folder4:AddSwitch("Hide all frames", function(State)
+    local hideallframes = State
+    if hideallframes then
+        local rSto = game:GetService("ReplicatedStorage")
+        for _, obj in pairs(rSto:GetChildren()) do
+            if obj.Name:match("Frame$") then
+                obj.Visible = not State
+            end
+        end
     end
 end)
