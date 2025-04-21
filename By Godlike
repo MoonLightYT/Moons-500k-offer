@@ -10,10 +10,10 @@ local ThankYou = window:AddTab("Thank You")
 local folder = ThankYou:AddFolder("Misc stuff")
 
 folder:AddSwitch("Auto Brawl", function(state)
-    local autobrawl = state
-    if autobrawl then
+    _G.autobrawl = state
+    if _G.autobrawl then
         task.spawn(function()
-            while autobrawl do 
+            while _G.autobrawl do
                 game:GetService("ReplicatedStorage").rEvents.brawlEvent:FireServer("joinBrawl")
                 task.wait(0)
             end
@@ -22,10 +22,10 @@ folder:AddSwitch("Auto Brawl", function(state)
 end)
 
 folder:AddSwitch("Auto Brawl GOD", function(state)
-    local autobrawlgod = state 
-    if autobrawlgod then
+    _G.autobrawlgod = state
+    if _G.autobrawlgod then
         task.spawn(function()
-            while autobrawlgod do 
+            while _G.autobrawlgod do
                 game:GetService("ReplicatedStorage").rEvents.brawlEvent:FireServer("joinBrawl")
                 task.wait(2)
             end
@@ -34,22 +34,20 @@ folder:AddSwitch("Auto Brawl GOD", function(state)
 end)
 
 folder:AddSwitch("Fast Tools", function(state)
-    local fasttools = state 
-    _G.FastTools = fasttools
-    
+    _G.fasttools = state
     local defaultSpeeds = {
-        {"Punch", "attackTime", fasttools and 0 or 0.35},
-        {"Ground Slam", "attackTime", fasttools and 0 or 6},
-        {"Stomp", "attackTime", fasttools and 0 or 7},
-        {"Handstands", "repTime", fasttools and 0 or 1},
-        {"Pushups", "repTime", fasttools and 0 or 1},
-        {"Weight", "repTime", fasttools and 0 or 1},
-        {"Situps", "repTime", fasttools and 0 or 1}
+        {"Punch", "attackTime", _G.fasttools and 0 or 0.35},
+        {"Ground Slam", "attackTime", _G.fasttools and 0 or 6},
+        {"Stomp", "attackTime", _G.fasttools and 0 or 7},
+        {"Handstands", "repTime", _G.fasttools and 0 or 1},
+        {"Pushups", "repTime", _G.fasttools and 0 or 1},
+        {"Weight", "repTime", _G.fasttools and 0 or 1},
+        {"Situps", "repTime", _G.fasttools and 0 or 1}
     }
-    
+
     local player = game.Players.LocalPlayer
     local backpack = player:WaitForChild("Backpack")
-    
+
     for _, toolInfo in ipairs(defaultSpeeds) do
         local tool = backpack:FindFirstChild(toolInfo[1])
         if tool and tool:FindFirstChild(toolInfo[2]) then
@@ -63,9 +61,9 @@ folder:AddSwitch("Fast Tools", function(state)
     end
 end)
 
-folder:AddSwitch("Free Autolift pass", function(state) 
-    local freeautoliftgamepass = state 
-    if freeautoliftgamepass then
+folder:AddSwitch("Free Autolift pass", function(state)
+    _G.freeautoliftgamepass = state
+    if _G.freeautoliftgamepass then
         local gamepassFolder = game:GetService("ReplicatedStorage").gamepassIds
         local player = game:GetService("Players").LocalPlayer
         for _, gamepass in pairs(gamepassFolder:GetChildren()) do
@@ -80,15 +78,14 @@ end)
 local folder2 = ThankYou:AddFolder("Auto Lift stuff")
 
 folder2:AddSwitch("Auto Weight", function(state)
-    local autoweight = state 
-    _G.AutoWeight = autoweight 
-    if autoweight then
+    _G.autoWeight = state
+    if _G.autoWeight then
         local weightTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Weight")
         if weightTool then
             game.Players.LocalPlayer.Character.Humanoid:EquipTool(weightTool)
         end
-        
-        while _G.AutoWeight do
+
+        while _G.autoWeight do
             game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
             task.wait(0.001)
         end
@@ -96,15 +93,14 @@ folder2:AddSwitch("Auto Weight", function(state)
 end)
 
 folder2:AddSwitch("Auto Pushups", function(state)
-    local autopushups = state 
-    _G.AutoPushups = autopushups 
-    if autopushups then
+    _G.autoPushups = state
+    if _G.autoPushups then
         local pushupsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Pushups")
         if pushupsTool then
             game.Players.LocalPlayer.Character.Humanoid:EquipTool(pushupsTool)
         end
-        
-        while _G.AutoPushups do
+
+        while _G.autoPushups do
             game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
             task.wait(0.001)
         end
@@ -112,15 +108,14 @@ folder2:AddSwitch("Auto Pushups", function(state)
 end)
 
 folder2:AddSwitch("Auto Situps", function(state)
-    local autositups = state 
-    _G.AutoSitups = autositups 
-    if autositups then
+    _G.autoSitups = state
+    if _G.autoSitups then
         local situpsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Situps")
         if situpsTool then
             game.Players.LocalPlayer.Character.Humanoid:EquipTool(situpsTool)
         end
-        
-        while _G.AutoSitups do
+
+        while _G.autoSitups do
             game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
             task.wait(0.001)
         end
@@ -128,15 +123,14 @@ folder2:AddSwitch("Auto Situps", function(state)
 end)
 
 folder2:AddSwitch("Auto Handstands", function(state)
-    local autohandstands = state 
-    _G.AutoHandstands = autohandstands 
-    if autohandstands then
+    _G.autoHandstands = state
+    if _G.autoHandstands then
         local handstandsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Handstands")
         if handstandsTool then
             game.Players.LocalPlayer.Character.Humanoid:EquipTool(handstandsTool)
         end
-        
-        while _G.AutoHandstands do
+
+        while _G.autoHandstands do
             game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
             task.wait(0.001)
         end
@@ -146,9 +140,9 @@ end)
 local folder3 = ThankYou:AddFolder("Misc V1")
 
 folder3:AddSwitch("Auto Claim Rewards", function(state)
-    local autoclaimrewards = state
-    if autoclaimrewards then
-        while autoclaimrewards do
+    _G.autoClaimRewards = state
+    if _G.autoClaimRewards then
+        while _G.autoClaimRewards do
             for i = 1, 8 do
                 game:GetService("ReplicatedStorage").rEvents.freeGiftClaimRemote:InvokeServer("claimGift", i)
             end
@@ -158,9 +152,9 @@ folder3:AddSwitch("Auto Claim Rewards", function(state)
 end)
 
 folder3:AddSwitch("Auto Spin Wheel", function(state)
-    local autospinwheel = state
-    if autospinwheel then
-        while autospinwheel do
+    _G.autoSpinWheel = state
+    if _G.autoSpinWheel then
+        while _G.autoSpinWheel do
             game:GetService("ReplicatedStorage").rEvents.openFortuneWheelRemote:InvokeServer("openFortuneWheel", game:GetService("ReplicatedStorage").fortuneWheelChances["Fortune Wheel"])
             task.wait(1)
         end
@@ -168,13 +162,12 @@ folder3:AddSwitch("Auto Spin Wheel", function(state)
 end)
 
 folder3:AddSwitch("Infinite Jump", function(state)
-    local infinitejump = state
-    if infinitejump then
-        _G.InfiniteJump = infinitejump
+    _G.infiniteJump = state
+    if _G.infiniteJump then
         local player = game:GetService('Players').LocalPlayer
         local userInputService = game:GetService('UserInputService')
         userInputService.JumpRequest:Connect(function()
-            if _G.InfiniteJump then
+            if _G.infiniteJump then
                 player.Character:FindFirstChildOfClass('Humanoid'):ChangeState('Jumping')
             end
         end)
@@ -182,12 +175,11 @@ folder3:AddSwitch("Infinite Jump", function(state)
 end)
 
 folder3:AddSwitch("NoClip", function(state)
-    local noclip = state
-    if noclip then
+    _G.noClip = state
+    if _G.noClip then
         local runService = game:GetService("RunService")
-        local players = game:GetService("Players")
-        local localPlayer = players.LocalPlayer
-        
+        local localPlayer = game.Players.LocalPlayer
+
         getgenv().noclipConnection = runService.Stepped:Connect(function()
             for _, part in pairs(localPlayer.Character:GetDescendants()) do
                 if part:IsA("BasePart") then
@@ -203,8 +195,8 @@ folder3:AddSwitch("NoClip", function(state)
 end)
 
 folder3:AddSwitch("Destroy Ad portal", function(state)
-    local destroyadportal = state
-    if destroyadportal then
+    _G.destroyAdPortal = state
+    if _G.destroyAdPortal then
         for _, portal in pairs(game:GetDescendants()) do
             if portal.Name == "RobloxForwardPortals" then
                 portal:Destroy()
@@ -223,9 +215,9 @@ folder3:AddSwitch("Anti AFK", function(state)
 end)
 
 folder3:AddSwitch("Mystery Function", function(state)
-    local mysteryfunction = state
-    if mysteryfunction then
-        getgenv().killNearby = true 
+    _G.mysteryFunction = state
+    if _G.mysteryFunction then
+        getgenv().killNearby = true
         local radiusVisual = Instance.new("Part")
         radiusVisual.Anchored = true
         radiusVisual.CanCollide = false
@@ -244,7 +236,7 @@ folder3:AddSwitch("Mystery Function", function(state)
                         local currentRadius = 10 -- Set a default radius
                         radiusVisual.Size = Vector3.new(currentRadius * 2, 0.1, currentRadius * 2)
                         radiusVisual.CFrame = myRoot.CFrame * CFrame.new(0, -2, 0)
-                        
+
                         for _, player in pairs(game:GetService("Players"):GetPlayers()) do
                             if player ~= game.Players.LocalPlayer then
                                 local char = player.Character
@@ -269,7 +261,7 @@ folder3:AddSwitch("Mystery Function", function(state)
                                         game:GetService("Debris"):AddItem(killEffect, 0.5)
 
                                         firetouchinterest(root, myCharacter.LeftHand, 0)
-                                        wait() 
+                                        wait()
                                         firetouchinterest(root, myCharacter.LeftHand, 1)
                                     end
                                 end
@@ -289,8 +281,8 @@ ThankYou:AddLabel("----OP Tools----")
 local folder4 = ThankYou:AddFolder("Thx for 500K account bro")
 
 folder4:AddSwitch("Fast Rebirth", function(state)
-    local fastrebirth = state
-    if fastrebirth then
+    _G.fastRebirth = state
+    if _G.fastRebirth then
         local replicatedStorage = game:GetService("ReplicatedStorage")
         local players = game:GetService("Players")
         local localPlayer = players.LocalPlayer
@@ -386,42 +378,37 @@ folder4:AddSwitch("Fast Rebirth", function(state)
 end)
 
 folder4:AddSwitch("Speed Grind", function(state)
-    local speedgrind = state
-    if speedgrind then
-       isGrinding = Value 
+    _G.speedGrind = state
+    if _G.speedGrind then
+        _G.isGrinding = true 
 
-        if not Value then
-            return
-        end
-
-        for i = 1, 10 do
-            task.spawn(function()
-                while isGrinding do
-                    game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
-                    task.wait(0.00001) 
-                end
-            end)
+        while _G.isGrinding do
+            for _ = 1, 10 do
+                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+                task.wait(0.00001)
+            end
+            task.wait()
         end
     end
-}) 
+end)
 
 folder4:AddSwitch("Hide all frames", function(state)
-    local hideallframes = state
-    if hideallframes then
+    local hideAllFrames = state
+    if hideAllFrames then
         local rSto = game:GetService("ReplicatedStorage")
         for _, obj in pairs(rSto:GetChildren()) do
             if obj.Name:match("Frame$") then
-                obj.Visible = not state
+                obj.Visible = not hideAllFrames
             end
         end
     end
 end)
 
 local folder5 = ThankYou:AddFolder("Tiny rock")
+
 folder5:AddSwitch("Tiny rock Normal glitch", function(state)
-    local tinyrocknormalglitch = state
-    if tinyrocknormalglitch then
-        local selectrock = "Tiny Island Rock"
+    _G.tinyRockNormalGlitch = state
+    if _G.tinyRockNormalGlitch then
         getgenv().autoFarm = true
         while getgenv().autoFarm do
             task.wait()
@@ -434,7 +421,6 @@ folder5:AddSwitch("Tiny rock Normal glitch", function(state)
                             firetouchinterest(v.Parent.Rock, playerCharacter.RightHand, 1)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 0)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 1)
-                            gettool()
                         end
                     end
                 end
@@ -444,19 +430,14 @@ folder5:AddSwitch("Tiny rock Normal glitch", function(state)
 end)
 
 folder5:AddSwitch("Tiny rock Fast Glitch", function(state)
-    local tinyrockfastglitch = state
-    if tinyrockfastglitch then
-        local selectrock = "Tiny Island Rock"
+    _G.tinyRockFastGlitch = state
+    if _G.tinyRockFastGlitch then
         getgenv().autoFarm = true
 
         while getgenv().autoFarm do
-
             task.wait()
-
             if game:GetService("Players").LocalPlayer.Durability.Value >= 0 then
-
                 for _, v in pairs(game:GetService("Workspace").machinesFolder:GetDescendants()) do
-
                     if v.Name == "neededDurability" and v.Value == 0 then
                         local playerCharacter = game.Players.LocalPlayer.Character
                         if playerCharacter:FindFirstChild("LeftHand") and playerCharacter:FindFirstChild("RightHand") then
@@ -464,25 +445,19 @@ folder5:AddSwitch("Tiny rock Fast Glitch", function(state)
                             firetouchinterest(v.Parent.Rock, playerCharacter.RightHand, 1)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 0)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 1)
-                            gettool()
                         end
                     end
-
                 end
-
             end
-
         end
-
     end
 end)
 
 local folder6 = ThankYou:AddFolder("Frost rock")
 
 folder6:AddSwitch("Frost rock normal glitch", function(state)
-    local frostrocknormalglitch = state
-    if frostrocknormalglitch then
-        local selectrock = "Frost Gym Rock"
+    _G.frostRockNormalGlitch = state
+    if _G.frostRockNormalGlitch then
         getgenv().autoFarm = true
         while getgenv().autoFarm do
             task.wait(0.001)
@@ -495,7 +470,6 @@ folder6:AddSwitch("Frost rock normal glitch", function(state)
                             firetouchinterest(v.Parent.Rock, playerCharacter.RightHand, 1)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 0)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 1)
-                            gettool()
                         end
                     end
                 end
@@ -505,19 +479,14 @@ folder6:AddSwitch("Frost rock normal glitch", function(state)
 end)
 
 folder6:AddSwitch("Frost Rock Fast Glitch", function(state)
-    local frostrockfastglitch = state
-    if frostrockfastglitch then
-        local selectrock = "Frost Gym Rock"
+    _G.frostRockFastGlitch = state
+    if _G.frostRockFastGlitch then
         getgenv().autoFarm = true
 
         while getgenv().autoFarm do
-
             task.wait()
-
             if game:GetService("Players").LocalPlayer.Durability.Value >= 150000 then
-
                 for _, v in pairs(game:GetService("Workspace").machinesFolder:GetDescendants()) do
-
                     if v.Name == "neededDurability" and v.Value == 150000 then
                         local playerCharacter = game.Players.LocalPlayer.Character
                         if playerCharacter:FindFirstChild("LeftHand") and playerCharacter:FindFirstChild("RightHand") then
@@ -525,25 +494,19 @@ folder6:AddSwitch("Frost Rock Fast Glitch", function(state)
                             firetouchinterest(v.Parent.Rock, playerCharacter.RightHand, 1)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 0)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 1)
-                            gettool()
                         end
                     end
-
                 end
-
             end
-
         end
-
     end
 end)
 
 local folder7 = ThankYou:AddFolder("Mystic rock")
 
 folder7:AddSwitch("Mystic Rock Normal Glitch", function(state)
-    local mysticrocknormalglitch = state
-    if mysticrocknormalglitch then
-        local selectrock = "Mythical Gym Rock"
+    _G.mysticRockNormalGlitch = state
+    if _G.mysticRockNormalGlitch then
         getgenv().autoFarm = true
         while getgenv().autoFarm do
             task.wait(0.001)
@@ -556,7 +519,6 @@ folder7:AddSwitch("Mystic Rock Normal Glitch", function(state)
                             firetouchinterest(v.Parent.Rock, playerCharacter.RightHand, 1)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 0)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 1)
-                            gettool()
                         end
                     end
                 end
@@ -566,19 +528,14 @@ folder7:AddSwitch("Mystic Rock Normal Glitch", function(state)
 end)
 
 folder7:AddSwitch("Mystic Rock Fast Glitch", function(state)
-    local mysticrockfastglitch = state
-    if mysticrockfastglitch then
-        local selectrock = "Mythical Gym Rock"
+    _G.mysticRockFastGlitch = state
+    if _G.mysticRockFastGlitch then
         getgenv().autoFarm = true
 
         while getgenv().autoFarm do
-
             task.wait()
-
             if game:GetService("Players").LocalPlayer.Durability.Value >= 400000 then
-
                 for _, v in pairs(game:GetService("Workspace").machinesFolder:GetDescendants()) do
-
                     if v.Name == "neededDurability" and v.Value == 400000 then
                         local playerCharacter = game.Players.LocalPlayer.Character
                         if playerCharacter:FindFirstChild("LeftHand") and playerCharacter:FindFirstChild("RightHand") then
@@ -586,15 +543,10 @@ folder7:AddSwitch("Mystic Rock Fast Glitch", function(state)
                             firetouchinterest(v.Parent.Rock, playerCharacter.RightHand, 1)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 0)
                             firetouchinterest(v.Parent.Rock, playerCharacter.LeftHand, 1)
-                            gettool()
                         end
                     end
-
                 end
-
             end
-
         end
-
     end
 end)
