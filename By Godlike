@@ -388,18 +388,22 @@ end)
 folder4:AddSwitch("Speed Grind", function(state)
     local speedgrind = state
     if speedgrind then
-        local isGrinding = true
+       isGrinding = Value 
 
-        for i = 1, 12 do
+        if not Value then
+            return
+        end
+
+        for i = 1, 10 do
             task.spawn(function()
                 while isGrinding do
                     game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
-                    task.wait(0.083) 
+                    task.wait(0.00001) 
                 end
             end)
         end
     end
-end)
+}) 
 
 folder4:AddSwitch("Hide all frames", function(state)
     local hideallframes = state
