@@ -33,5 +33,6 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local Tab = Window:CreateTab("Main", 4483362458) -- Title, Image
+local TabMain = Window:CreateTab("Main", "circle-check-big")
 
+local Section = TabMain:CreateSection("Misc V1") -- Changed from Tab.Main to TabMain
