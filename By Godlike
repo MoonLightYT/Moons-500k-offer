@@ -3,7 +3,7 @@ local Window = Rayfield:CreateWindow({
    Name = "Moons 500K Offer",
    Icon = 0, 
    LoadingTitle = "By Godlike",
-   LoadingSubtitle = "MoonHub ontop",
+   LoadingSubtitle = "MoonHub on top",
    Theme = "Serenity",
 
    DisableRayfieldPrompts = false,
@@ -46,11 +46,12 @@ local TabAutoRebirth = Window:CreateTab("Auto Rebirth", "box")
 local TabAutoKill = Window:CreateTab("Auto Kill", "axe")
 local TabOptools = Window:CreateTab("OP Tools", "power")
 local TabMisc = Window:CreateTab("Misc", "settings")
-local Tablinkedscripts = Window:CreateTab("Linked Scripts", "file")
-local Tabwhitelisted = Window:CreateTab("Whitelisted users", "lock-keyhole-open")
+local TabLinkedscripts = Window:CreateTab("Linked Scripts", "file")
+local TabWhitelisted = Window:CreateTab("Whitelisted users", "lock-keyhole-open")
 
 local Section = TabMain:CreateSection("Misc V1")
 
+-- Add the size slider
 local SliderSize = TabMain:CreateSlider({
    Name = "Size Changer",
    Range = {1, 100},
@@ -67,6 +68,7 @@ local SliderSize = TabMain:CreateSlider({
    end
 })
 
+-- Add the speed slider
 local SliderSpeed = TabMain:CreateSlider({
    Name = "Speed Changer",
    Range = {14, 100},
@@ -78,13 +80,14 @@ local SliderSpeed = TabMain:CreateSlider({
       _G.AutoSpeed = Value
       while _G.AutoSpeed do
          if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
-            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.AutoSpeed -- Fixed variable name to _G.AutoSpeed
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.AutoSpeed
          end
-         task.wait(0.1) -- Added a slight wait to control loop speed.
+         task.wait(0.1)
       end
    end,
 })
 
+-- Button to give gamepass
 local Button = TabMain:CreateButton({
    Name = "FREE AUTO LIFT GAMEPASS!!!",
    Callback = function()
@@ -99,36 +102,32 @@ local Button = TabMain:CreateButton({
    end,
 })
 
+-- Create a section for user comments
 local Section = TabMain:CreateSection("Tell me what u want added to this tab")
-
-
 
 local Section = TabAutoWeight:CreateSection("BASIC AUTO OPTIONS")
 
 local Toggle = TabAutoWeight:CreateToggle({
    Name = "Auto Weight",
    CurrentValue = false,
-   Flag = "Auto Weight", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "Auto Weight",
    Callback = function(Value)
       _G.AutoWeight = Value
-		if Value then
-			local weightTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Weight")
-			if weightTool then
-				game.Players.LocalPlayer.Character.Humanoid:EquipTool(weightTool)
-			end
-		else
-			local character = game.Players.LocalPlayer.Character
-			local equipped = character:FindFirstChild("Weight")
-			if equipped then
-				equipped.Parent = game.Players.LocalPlayer.Backpack
-			end
-		end
-		while _G.AutoWeight do
-			game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
-			task.wait(0.001)
-		end
-	end
-})
-   
-   end,
-})
+      if Value then
+         local weightTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Weight")
+         if weightTool then
+            game.Players.LocalPlayer.Character.Humanoid:EquipTool(weightTool)
+         end
+         while _G.AutoWeight do
+            game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+            task.wait(0.001)
+         end
+      else
+         local character = game.Players.LocalPlayer.Character
+         local equipped = character:FindFirstChild("Weight")
+         if equipped then
+            equipped.Parent = game.Players.LocalPlayer.Backpack
+         end
+      end
+   end
+}) -- Correctly close the function
