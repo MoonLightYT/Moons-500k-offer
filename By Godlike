@@ -100,3 +100,35 @@ local Button = TabMain:CreateButton({
 })
 
 local Section = TabMain:CreateSection("Tell me what u want added to this tab")
+
+
+
+local Section = TabAutoWeight:CreateSection("BASIC AUTO OPTIONS")
+
+local Toggle = TabAutoWeight:CreateToggle({
+   Name = "Auto Weight",
+   CurrentValue = false,
+   Flag = "Auto Weight", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+      _G.AutoWeight = Value
+		if Value then
+			local weightTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Weight")
+			if weightTool then
+				game.Players.LocalPlayer.Character.Humanoid:EquipTool(weightTool)
+			end
+		else
+			local character = game.Players.LocalPlayer.Character
+			local equipped = character:FindFirstChild("Weight")
+			if equipped then
+				equipped.Parent = game.Players.LocalPlayer.Backpack
+			end
+		end
+		while _G.AutoWeight do
+			game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+			task.wait(0.001)
+		end
+	end
+})
+   
+   end,
+})
