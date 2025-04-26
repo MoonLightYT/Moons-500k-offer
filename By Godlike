@@ -34,5 +34,12 @@ local Window = Rayfield:CreateWindow({
 })
 
 local TabMain = Window:CreateTab("Main", "circle-check-big")
+local TabAutoWeight = Window:CreateTab("Auto Weight", "dumbbell")
+local TabAutoRebirth = Window:CreateTab("Auto Rebirth", "box")
+local TabAutoKill = Window:CreateTab("Auto Kill", "axe")
+local TabOptools = Window:CreateTab("OP Tools", "power")
+local TabMisc = Window:CreateTab("Misc", "settings")
+local Tablinkedscripts = Window:CreateTab("Linked Scripts", "file")
+local Tabwhitelisted = Window:CreateTab("Whitelisted users", "lock-keyhole-open")
 
 local Section = TabMain:CreateSection("Misc V1") -- Changed from Tab.Main to TabMain
