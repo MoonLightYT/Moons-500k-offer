@@ -33,6 +33,13 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
+Rayfield:Notify({
+   Title = "Hello Again Carson",
+   Content = "Welcome Back my G",
+   Duration = 6.5,
+   Image = "moon",
+})
+
 local TabMain = Window:CreateTab("Main", "circle-check-big")
 local TabAutoWeight = Window:CreateTab("Auto Weight", "dumbbell")
 local TabAutoRebirth = Window:CreateTab("Auto Rebirth", "box")
@@ -42,4 +49,20 @@ local TabMisc = Window:CreateTab("Misc", "settings")
 local Tablinkedscripts = Window:CreateTab("Linked Scripts", "file")
 local Tabwhitelisted = Window:CreateTab("Whitelisted users", "lock-keyhole-open")
 
-local Section = TabMain:CreateSection("Misc V1") -- Changed from Tab.Main to TabMain
+local Section = TabMain:CreateSection("Misc V1")
+
+local Slider = TabMain:CreateSlider({
+   Name = "Size Changer",
+   Range = {1, 100},
+   Increment = 1,
+   Suffix = "Size",
+   CurrentValue = 2,
+   Flag = "Size", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+      _G.AutoSize = Value
+      while _G.AutoSize do
+         game:GetService("ReplicatedStorage").rEvents.changeSpeedSizeRemote:InvokeServer("changeSize", Value)
+         task.wait(0.1)
+      end
+   end
+})
