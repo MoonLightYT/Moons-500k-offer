@@ -42,6 +42,7 @@ Rayfield:Notify({
 
 local TabMain = Window:CreateTab("Main", "circle-check-big")
 local TabAutoWeight = Window:CreateTab("Auto Weight", "dumbbell")
+local TabAutoRebirth = Window:CreateTab("Auto Rebirth", "dumbbell")
 
 local Section = TabMain:CreateSection("Misc V1")
 
@@ -98,7 +99,7 @@ local Button = TabMain:CreateButton({
 })
 
 -- Create toggles for Auto Weight, Pushups, Handstands, and Situps
-local function createAutoActionToggle(tab, name, actionName)
+local function createAutoActionToggle(tab, name)
     return tab:CreateToggle({
         Name = "Auto " .. name,
         CurrentValue = false,
@@ -122,10 +123,10 @@ local function createAutoActionToggle(tab, name, actionName)
     })
 end
 
-createAutoActionToggle(TabAutoWeight, "Weight", "Weight")
-createAutoActionToggle(TabAutoWeight, "Pushups", "Pushups")
-createAutoActionToggle(TabAutoWeight, "Handstands", "Handstands")
-createAutoActionToggle(TabAutoWeight, "Situps", "Situps")
+createAutoActionToggle(TabAutoWeight, "Weight")
+createAutoActionToggle(TabAutoWeight, "Pushups")
+createAutoActionToggle(TabAutoWeight, "Handstands")
+createAutoActionToggle(TabAutoWeight, "Situps")
 
 -- Create a section for jungle machines
 local Section = TabAutoWeight:CreateSection("Auto Jungle Machines")
@@ -153,3 +154,65 @@ createJungleMachineToggle(TabAutoWeight, "Squat", Vector3.new(-8374.25586, 34.59
 createJungleMachineToggle(TabAutoWeight, "Lift", Vector3.new(-8678.05566, 14.5030098, 2089.25977))
 
 local Section = TabAutoWeight:CreateSection("Will add more stuff later")
+
+local infiniteRebirthLoop
+local targetRebirthValue = 1
+
+local ToggleAutoRebirth = TabAutoRebirth:CreateToggle({
+   Name = "Auto Rebirth infinite",
+   CurrentValue = false,
+   Flag = "Autorebirthinf",
+   Callback = function(Value)
+      if Value then
+            infiniteRebirthLoop = task.spawn(function()
+                while wait(0.1) do
+                    game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer("rebirthRequest")
+                end
+            end)
+        else
+            if infiniteRebirthLoop then
+                task.cancel(infiniteRebirthLoop)
+                infiniteRebirthLoop = nil
+            end
+        end
+    end
+})
+
+local Input = TabAutoRebirth:CreateInput({
+   Name = "Target Rebirth input",
+   CurrentValue = "1",
+   PlaceholderText = "Put in a number",
+   RemoveTextAfterFocusLost = false,
+   Flag = "TargetRebirth",
+   Callback = function(Text)
+     targetRebirthValue = tonumber(Text) or 1  -- Fixed the input reference
+     -- Call updateStats if it exists as a function
+     if typeof(updateStats) == "function" then
+         updateStats()
+     end
+    end
+})
+
+local ToggleTargetRebirth = TabAutoRebirth:CreateToggle({
+   Name = "Auto Rebirth Target",
+   CurrentValue = false,
+   Flag = "ART",
+   Callback = function(Value)
+      if Value then
+         targetRebirthLoop = task.spawn(function()
+            while wait(0.1) do
+               if game.Players.LocalPlayer.leaderstats.Rebirths.Value >= targetRebirthValue then
+                  ToggleTargetRebirth:SetValue(false)  -- Reference to the toggle directly
+                  break
+               end
+               game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer("rebirthRequest")
+            end
+         end)
+      else
+         if targetRebirthLoop then
+            task.cancel(targetRebirthLoop)
+            targetRebirthLoop = nil
+         end
+      end
+   end
+})
