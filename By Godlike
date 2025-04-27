@@ -209,129 +209,58 @@ local Toggle = TabAutoWeight:CreateToggle({
 
 local Section = TabAutoWeight:CreateSection("Auto Jungle Machines")
 
+
 local Toggle = TabAutoWeight:CreateToggle({
-    Name = "Auto Machines",
-    CurrentValue = false,
-    Flag = "Auto Machines",
-    Callback = function(Value)
-        local function pressE()
-            local vim = game:GetService("VirtualInputManager")
-            vim:SendKeyEvent(true, "E", false, game)
-            task.wait(0.1)
-            vim:SendKeyEvent(false, "E", false, game)
-        end
-
-        local function autoLift()
-            while getgenv().working and task.wait() do
-                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+   Name = "Jungle Gym Bench",
+   CurrentValue = false,
+   Flag = "JungleBench", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+      task.spawn(function()
+            while jungleBenchToggle do
+                game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(-8629.88086, 64.8842468, 1855.03467))
+                game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", workspace.machinesFolder["Jungle Bench"].interactSeat)
+                task.wait(0.1)
             end
-        end
+        end)
+    end
+end
+})
 
-        local function teleportAndStart(machineName, position)
-            if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = position
-                task.wait(0.5)
-                pressE()
-                autoLift()
+
+local Toggle = TabAutoWeight:CreateToggle({
+   Name = "Jungle Gym Squat",
+   CurrentValue = false,
+   Flag = "JungleSquat", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+      task.spawn(function()
+            while jungleSquatToggle do
+                game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(-8374.25586, 34.5933418, 2932.44995))
+                game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", workspace.machinesFolder["Jungle Squat"].interactSeat)
+                task.wait(0.1)
             end
-        end
+        end)
+    end
+end
+})
 
-        local locationsList = {
-            "Starter Island",
-            "Legend Beach",
-            "Frost Gym",
-            "Mythical Gym",
-            "Eternal Gym",
-            "Legend Gym",
-            "Muscle King Gym",
-            "Jungle Gym"
-        }
 
-        local workoutPositions = {
-            ["Bench Press"] = {
-                ["Starter Island"] = CFrame.new(-17.0609932, 3.31417918, -2.48164988),
-                ["Legend Beach"] = CFrame.new(470.334656, 3.31417966, -321.053925),
-                ["Frost Gym"] = CFrame.new(-3013.24194, 39.2158546, -335.036926),
-                ["Mythical Gym"] = CFrame.new(2371.7356, 39.2158546, 1246.31555),
-                ["Eternal Gym"] = CFrame.new(-7176.19141, 45.394104, -1106.31421),
-                ["Legend Gym"] = CFrame.new(4111.91748, 1020.46674, -3799.97217),
-                ["Muscle King Gym"] = CFrame.new(-8590.06152, 46.0167427, -6043.34717),
-                ["Jungle Gym"] = CFrame.new(-8173, 64, 1898)
-            },
-            ["Squat"] = {
-                ["Starter Island"] = CFrame.new(-48.8711243, 3.31417918, -11.8831778),
-                ["Legend Beach"] = CFrame.new(470.334656, 3.31417966, -321.053925),
-                ["Frost Gym"] = CFrame.new(-2933.47998, 29.6399612, -579.946045),
-                ["Mythical Gym"] = CFrame.new(2489.21484, 3.67686629, 849.051025),
-                ["Eternal Gym"] = CFrame.new(-7176.19141, 45.394104, -1106.31421),
-                ["Legend Gym"] = CFrame.new(4304.99023, 987.829956, -4124.2334),
-                ["Muscle King Gym"] = CFrame.new(-8940.12402, 13.1642084, -5699.13477),
-                ["Jungle Gym"] = CFrame.new(-8352, 34, 2878)
-            },
-            ["Deadlift"] = {
-                ["Starter Island"] = CFrame.new(-48.8711243, 3.31417918, -11.8831778),
-                ["Legend Beach"] = CFrame.new(470.334656, 3.31417966, -321.053925),
-                ["Frost Gym"] = CFrame.new(-2933.47998, 29.6399612, -579.946045),
-                ["Mythical Gym"] = CFrame.new(2489.21484, 3.67686629, 849.051025),
-                ["Eternal Gym"] = CFrame.new(-7176.19141, 45.394104, -1106.31421),
-                ["Legend Gym"] = CFrame.new(4304.99023, 987.829956, -4124.2334),
-                ["Muscle King Gym"] = CFrame.new(-8940.12402, 13.1642084, -5699.13477)
-            },
-            ["Pull Up"] = {
-                ["Starter Island"] = CFrame.new(-33.3047485, 3.31417918, -11.8831778),
-                ["Legend Beach"] = CFrame.new(470.334656, 3.31417966, -321.053925),
-                ["Frost Gym"] = CFrame.new(-2933.47998, 29.6399612, -579.946045),
-                ["Mythical Gym"] = CFrame.new(2489.21484, 3.67686629, 849.051025),
-                ["Eternal Gym"] = CFrame.new(-7176.19141, 45.394104, -1106.31421),
-                ["Legend Gym"] = CFrame.new(4304.99023, 987.829956, -4124.2334),
-                ["Muscle King Gym"] = CFrame.new(-8940.12402, 13.1642084, -5699.13477),
-                ["Jungle Gym"] = CFrame.new(-8666, 34, 2070)
-            },
-            ["Boulder"] = {
-                ["Starter Island"] = CFrame.new(-33.3047485, 3.31417918, -11.8831778),
-                ["Legend Beach"] = CFrame.new(470.334656, 3.31417966, -321.053925),
-                ["Frost Gym"] = CFrame.new(-2933.47998, 29.6399612, -579.946045),
-                ["Mythical Gym"] = CFrame.new(2489.21484, 3.67686629, 849.051025),
-                ["Eternal Gym"] = CFrame.new(-7176.19141, 45.394104, -1106.31421),
-                ["Legend Gym"] = CFrame.new(4304.99023, 987.829956, -4124.2334),
-                ["Muscle King Gym"] = CFrame.new(-8940.12402, 13.1642084, -5699.13477),
-                ["Jungle Gym"] = CFrame.new(-8621, 34, 2684)
-            }
-        }
-
-        local workoutTypes = {
-            "Bench Press",
-            "Squat",
-            "Deadlift",
-            "Pull Up",
-            "Boulder"
-        }
-
-        for _, workoutType in ipairs(workoutTypes) do
-            local dropdown = TabAutoWeight:CreateDropdown(workoutType .. " dropdown", {
-                Title = "Select " .. workoutType,
-                Description = "Choose Your Training Location",
-                Values = locationsList,
-                Multi = false,
-                Default = 1,
-                Callback = function(Value)
-                    _G["select" .. string.lower(string.gsub(workoutType, " ", ""))] = Value
-                end
-            })
-            local toggle = TabAutoWeight:CreateToggle(workoutType .. " Toggle", {
-                Title = "Farm " .. workoutType,
-                Description = "Auto Trains " .. workoutType,
-                Default = false,
-                Callback = function(Value)
-                    getgenv().working = Value
-                    if Value then
-                        local selected = _G["select" .. string.lower(string.gsub(workoutType, " ", ""))]
-                        if workoutPositions[workoutType][selected] then
-                            teleportAndStart(workoutType, workoutPositions[workoutType][selected])
-                        end
-                    end
-                end
-            })
-        end
+local Toggle = TabAutoWeight:CreateToggle({
+   Name = "Jungle Gym lift",
+   CurrentValue = false,
+   Flag = "JungleLift", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+      task.spawn(function()
+            while jungleBarLiftToggle do
+                game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(-8678.05566, 14.5030098, 2089.25977))
+                game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", workspace.machinesFolder["Jungle Bar Lift"].interactSeat)
+                task.wait(0.1)
+            end
+        end)
     end
 })
+
+local Section = TabAutoWeight:CreateSection("Will add more stuff later")
+
+
+
+      
