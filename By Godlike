@@ -137,14 +137,15 @@ local function createJungleMachineToggle(tab, name, position)
         CurrentValue = false,
         Flag = "Jungle" .. name,
         Callback = function(Value)
-            task.spawn(function()
-                while Value do
-                    local player = game.Players.LocalPlayer
-                    player.Character:SetPrimaryPartCFrame(CFrame.new(position))
-                    game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", workspace.machinesFolder[name].interactSeat)
-                    task.wait(0.1)
-                end
-            end)
+            if Value then
+                task.spawn(function()
+                    while true do
+                        game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(position))
+                        game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", workspace.machinesFolder[name].interactSeat)
+                        task.wait(0.1)
+                    end
+                end)
+            end
         end
     })
 end
@@ -159,14 +160,15 @@ local SectionMoreStuff = TabAutoWeight:CreateSection("Will add more stuff later"
 local infiniteRebirthLoop
 
 local ToggleAutoRebirth = TabAutoRebirth:CreateToggle({
-   Name = "Auto Rebirth infinite",
+   Name = "Auto Rebirth Infinite",
    CurrentValue = false,
    Flag = "Autorebirthinf",
    Callback = function(Value)
       if Value then
             infiniteRebirthLoop = task.spawn(function()
-                while wait(0.1) do
+                while true do
                     game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer("rebirthRequest")
+                    task.wait(0.1)
                 end
             end)
         else
@@ -209,21 +211,6 @@ local ToggleFastRebirth = TabAutoRebirth:CreateToggle({
          end
      end
      
-     local function findMachine(machineName)
-         local machine = workspace.machinesFolder:FindFirstChild(machineName)
-         if not machine then
-             for _, folder in pairs(workspace:GetChildren()) do
-                 if folder:IsA("Folder") and folder.Name:find("machines") then
-                     machine = folder:FindFirstChild(machineName)
-                     if machine then
-                         break
-                     end
-                 end
-             end
-         end
-         return machine
-     end
-     
      local function simulateKeyPress()
          local virtualInputManager = game:GetService("VirtualInputManager")
          virtualInputManager:SendKeyEvent(true, "E", false, game)
@@ -233,6 +220,8 @@ local ToggleFastRebirth = TabAutoRebirth:CreateToggle({
      
      task.spawn(function()
          while true do
+             if not Value then return end -- Break the loop if the toggle is off
+             
              local rebirths = localPlayer.leaderstats.Rebirths.Value
              local strengthThreshold = 10000 + (5000 * rebirths)
      
@@ -240,7 +229,7 @@ local ToggleFastRebirth = TabAutoRebirth:CreateToggle({
                  local goldenRebirthValue = localPlayer.ultimatesFolder["Golden Rebirth"].Value
                  strengthThreshold = math.floor(strengthThreshold * (1 - (goldenRebirthValue * 0.1)))
              end
-     
+
              unequipAllPets()
              task.wait(0.1)
              equipPetByName("Swift Samurai")
@@ -251,5 +240,10 @@ local ToggleFastRebirth = TabAutoRebirth:CreateToggle({
                  end
                  task.wait()
              end
-     
-             unequipAllPets
+         end
+     end)
+   end
+})
+
+-- Ensure the script ends properly
+print("Script loaded successfully!")
