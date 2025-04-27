@@ -156,7 +156,7 @@ createJungleMachineToggle(TabAutoWeight, "Lift", Vector3.new(-8678.05566, 14.503
 local Section = TabAutoWeight:CreateSection("Will add more stuff later")
 
 local infiniteRebirthLoop
-local targetRebirthValue = 1
+
 
 local ToggleAutoRebirth = TabAutoRebirth:CreateToggle({
    Name = "Auto Rebirth infinite",
@@ -178,41 +178,108 @@ local ToggleAutoRebirth = TabAutoRebirth:CreateToggle({
     end
 })
 
-local Input = TabAutoRebirth:CreateInput({
-   Name = "Target Rebirth input",
-   CurrentValue = "1",
-   PlaceholderText = "Put in a number",
-   RemoveTextAfterFocusLost = false,
-   Flag = "TargetRebirth",
-   Callback = function(Text)
-     targetRebirthValue = tonumber(Text) or 1  -- Fixed the input reference
-     -- Call updateStats if it exists as a function
-     if typeof(updateStats) == "function" then
-         updateStats()
-     end
+local Toggle = TabAutoRebirth:CreateToggle({
+   Name = "Fast Rebirth",
+   CurrentValue = false,
+   Flag = "FastRebirth", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+     local replicatedStorage = game:GetService("ReplicatedStorage")
+local players = game:GetService("Players")
+local localPlayer = players.LocalPlayer
+ 
+local function unequipAllPets()
+    local petsFolder = localPlayer.petsFolder
+    for _, petFolder in pairs(petsFolder:GetChildren()) do
+        if petFolder:IsA("Folder") then
+            for _, pet in pairs(petFolder:GetChildren()) do
+                replicatedStorage.rEvents.equipPetEvent:FireServer("unequipPet", pet)
+            end
+        end
     end
+    task.wait(0.1)
+end
+ 
+local function equipPetByName(petName)
+    unequipAllPets()
+    task.wait(0.01)
+    for _, pet in pairs(localPlayer.petsFolder.Unique:GetChildren()) do
+        if pet.Name == petName then
+            replicatedStorage.rEvents.equipPetEvent:FireServer("equipPet", pet)
+        end
+    end
+end
+ 
+local function findMachine(machineName)
+    local machine = workspace.machinesFolder:FindFirstChild(machineName)
+    if not machine then
+        for _, folder in pairs(workspace:GetChildren()) do
+            if folder:IsA("Folder") and folder.Name:find("machines") then
+                machine = folder:FindFirstChild(machineName)
+                if machine then
+                    break
+                end
+            end
+        end
+    end
+    return machine
+end
+ 
+local function simulateKeyPress()
+    local virtualInputManager = game:GetService("VirtualInputManager")
+    virtualInputManager:SendKeyEvent(true, "E", false, game)
+    task.wait(0.1)
+    virtualInputManager:SendKeyEvent(false, "E", false, game)
+end
+ 
+task.spawn(function()
+    while true do
+        local rebirths = localPlayer.leaderstats.Rebirths.Value
+        local strengthThreshold = 10000 + (5000 * rebirths)
+ 
+        if localPlayer.ultimatesFolder:FindFirstChild("Golden Rebirth") then
+            local goldenRebirthValue = localPlayer.ultimatesFolder["Golden Rebirth"].Value
+            strengthThreshold = math.floor(strengthThreshold * (1 - (goldenRebirthValue * 0.1)))
+        end
+ 
+        unequipAllPets()
+        task.wait(0.1)
+        equipPetByName("Swift Samurai")
+ 
+        while localPlayer.leaderstats.Strength.Value < strengthThreshold do
+            for _ = 1, 10 do
+                localPlayer.muscleEvent:FireServer("rep")
+            end
+            task.wait()
+        end
+ 
+        unequipAllPets()
+        task.wait(0.1)
+        equipPetByName("Tribal Overlord")
+ 
+        local jungleBarLift = findMachine("Jungle Bar Lift")
+        if jungleBarLift and jungleBarLift:FindFirstChild("interactSeat") then
+            localPlayer.Character.HumanoidRootPart.CFrame = jungleBarLift.interactSeat.CFrame * CFrame.new(0, 3, 0)
+            repeat
+                task.wait(0.1)
+                simulateKeyPress()
+            until localPlayer.Character.Humanoid.Sit
+        end
+ 
+        local initialRebirths = localPlayer.leaderstats.Rebirths.Value
+        repeat
+            replicatedStorage.rEvents.rebirthRemote:InvokeServer("rebirthRequest")
+            task.wait(0.1)
+        until localPlayer.leaderstats.Rebirths.Value > initialRebirths
+ 
+        task.wait()
+    end
+end)
 })
 
-local ToggleTargetRebirth = TabAutoRebirth:CreateToggle({
-   Name = "Auto Rebirth Target",
-   CurrentValue = false,
-   Flag = "ART",
-   Callback = function(Value)
-      if Value then
-         targetRebirthLoop = task.spawn(function()
-            while wait(0.1) do
-               if game.Players.LocalPlayer.leaderstats.Rebirths.Value >= targetRebirthValue then
-                  ToggleTargetRebirth:SetValue(false)  -- Reference to the toggle directly
-                  break
-               end
-               game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer("rebirthRequest")
-            end
-         end)
-      else
-         if targetRebirthLoop then
-            task.cancel(targetRebirthLoop)
-            targetRebirthLoop = nil
-         end
-      end
-   end
-})
+
+local Section = TabAutoRebirth:CreateSection("i will add rebirth target and fast rebirth target")
+local Section = TabAutoRebirth:CreateSection("When i get better at rayfield library")
+local Section = TabAutoRebirth:CreateSection("Also more functions when i invent them :/")
+
+
+
