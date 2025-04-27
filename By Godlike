@@ -42,12 +42,6 @@ Rayfield:Notify({
 
 local TabMain = Window:CreateTab("Main", "circle-check-big")
 local TabAutoWeight = Window:CreateTab("Auto Weight", "dumbbell")
-local TabAutoRebirth = Window:CreateTab("Auto Rebirth", "box")
-local TabAutoKill = Window:CreateTab("Auto Kill", "axe")
-local TabOptools = Window:CreateTab("OP Tools", "power")
-local TabMisc = Window:CreateTab("Misc", "settings")
-local TabLinkedscripts = Window:CreateTab("Linked Scripts", "file")
-local TabWhitelisted = Window:CreateTab("Whitelisted users", "lock-keyhole-open")
 
 local Section = TabMain:CreateSection("Misc V1")
 
@@ -79,8 +73,9 @@ local SliderSpeed = TabMain:CreateSlider({
     Callback = function(Value)
         _G.AutoSpeed = Value
         while _G.AutoSpeed do
-            if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
-                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.AutoSpeed
+            local player = game.Players.LocalPlayer
+            if player.Character and player.Character:FindFirstChild("Humanoid") then
+                player.Character.Humanoid.WalkSpeed = _G.AutoSpeed
             end
             task.wait(0.1)
         end
@@ -102,165 +97,59 @@ local Button = TabMain:CreateButton({
     end,
 })
 
--- Create a section for user comments
-local Section = TabMain:CreateSection("Tell me what u want added to this tab")
-
-local Section = TabAutoWeight:CreateSection("BASIC AUTO OPTIONS")
-
-local Toggle = TabAutoWeight:CreateToggle({
-    Name = "Auto Weight",
-    CurrentValue = false,
-    Flag = "Auto Weight",
-    Callback = function(Value)
-        _G.AutoWeight = Value
-        if Value then
-            local weightTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Weight")
-            if weightTool then
-                game.Players.LocalPlayer.Character.Humanoid:EquipTool(weightTool)
-            end
-            while _G.AutoWeight do
-                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
-                task.wait(0.001)
-            end
-        else
-            local character = game.Players.LocalPlayer.Character
-            local equipped = character:FindFirstChild("Weight")
-            if equipped then
-                equipped.Parent = game.Players.LocalPlayer.Backpack
+-- Create toggles for Auto Weight, Pushups, Handstands, and Situps
+local function createAutoActionToggle(tab, name, actionName)
+    return tab:CreateToggle({
+        Name = "Auto " .. name,
+        CurrentValue = false,
+        Flag = "Auto" .. name,
+        Callback = function(Value)
+            _G["Auto" .. name] = Value
+            local tool = game.Players.LocalPlayer.Backpack:FindFirstChild(name)
+            if Value and tool then
+                game.Players.LocalPlayer.Character.Humanoid:EquipTool(tool)
+                while _G["Auto" .. name] do
+                    game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+                    task.wait(0.001)
+                end
+            else
+                local character = game.Players.LocalPlayer.Character
+                if character:FindFirstChild(name) then
+                    character[name].Parent = game.Players.LocalPlayer.Backpack
+                end
             end
         end
-    end
-})
+    })
+end
 
-local Toggle = TabAutoWeight:CreateToggle({
-    Name = "Auto Pushups",
-    CurrentValue = false,
-    Flag = "Auto Pushups",
-    Callback = function(Value)
-        _G.AutoPushups = Value
-        if Value then
-            local pushupsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Pushups")
-            if pushupsTool then
-                game.Players.LocalPlayer.Character.Humanoid:EquipTool(pushupsTool)
-            end
-            while _G.AutoPushups do
-                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
-                task.wait(0.001)
-            end
-        else
-            local character = game.Players.LocalPlayer.Character
-            local equipped = character:FindFirstChild("Pushups")
-            if equipped then
-                equipped.Parent = game.Players.LocalPlayer.Backpack
-            end
-        end
-    end
-})
+createAutoActionToggle(TabAutoWeight, "Weight", "Weight")
+createAutoActionToggle(TabAutoWeight, "Pushups", "Pushups")
+createAutoActionToggle(TabAutoWeight, "Handstands", "Handstands")
+createAutoActionToggle(TabAutoWeight, "Situps", "Situps")
 
-local Toggle = TabAutoWeight:CreateToggle({
-    Name = "Auto Handstands",
-    CurrentValue = false,
-    Flag = "Auto Handstands",
-    Callback = function(Value)
-        _G.AutoHandstands = Value
-        if Value then
-            local handstandsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Handstands")
-            if handstandsTool then
-                game.Players.LocalPlayer.Character.Humanoid:EquipTool(handstandsTool)
-            end
-            while _G.AutoHandstands do
-                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
-                task.wait(0.001)
-            end
-        else
-            local character = game.Players.LocalPlayer.Character
-            local equipped = character:FindFirstChild("Handstands")
-            if equipped then
-                equipped.Parent = game.Players.LocalPlayer.Backpack
-            end
-        end
-    end
-})
-
-local Toggle = TabAutoWeight:CreateToggle({
-    Name = "Auto Situps",
-    CurrentValue = false,
-    Flag = "Auto Situps",
-    Callback = function(Value)
-        _G.AutoSitups = Value
-        if Value then
-            local situpsTool = game.Players.LocalPlayer.Backpack:FindFirstChild("Situps")
-            if situpsTool then
-                game.Players.LocalPlayer.Character.Humanoid:EquipTool(situpsTool)
-            end
-            while _G.AutoSitups do
-                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
-                task.wait(0.001)
-            end
-        else
-            local character = game.Players.LocalPlayer.Character
-            local equipped = character:FindFirstChild("Situps")
-            if equipped then
-                equipped.Parent = game.Players.LocalPlayer.Backpack
-            end
-        end
-    end
-})
-
+-- Create a section for jungle machines
 local Section = TabAutoWeight:CreateSection("Auto Jungle Machines")
 
-
-local Toggle = TabAutoWeight:CreateToggle({
-   Name = "Jungle Gym Bench",
-   CurrentValue = false,
-   Flag = "JungleBench", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-      task.spawn(function()
-            while jungleBenchToggle do
-                game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(-8629.88086, 64.8842468, 1855.03467))
-                game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", workspace.machinesFolder["Jungle Bench"].interactSeat)
-                task.wait(0.1)
-            end
-        end)
-    end
+local function createJungleMachineToggle(tab, name, position)
+    return tab:CreateToggle({
+        Name = "Jungle Gym " .. name,
+        CurrentValue = false,
+        Flag = "Jungle" .. name,
+        Callback = function(Value)
+            task.spawn(function()
+                while Value do
+                    local player = game.Players.LocalPlayer
+                    player.Character:SetPrimaryPartCFrame(CFrame.new(position))
+                    game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", workspace.machinesFolder[name].interactSeat)
+                    task.wait(0.1)
+                end
+            end)
+        end
+    })
 end
-})
 
-
-local Toggle = TabAutoWeight:CreateToggle({
-   Name = "Jungle Gym Squat",
-   CurrentValue = false,
-   Flag = "JungleSquat", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-      task.spawn(function()
-            while jungleSquatToggle do
-                game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(-8374.25586, 34.5933418, 2932.44995))
-                game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", workspace.machinesFolder["Jungle Squat"].interactSeat)
-                task.wait(0.1)
-            end
-        end)
-    end
-end
-})
-
-
-local Toggle = TabAutoWeight:CreateToggle({
-   Name = "Jungle Gym lift",
-   CurrentValue = false,
-   Flag = "JungleLift", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-      task.spawn(function()
-            while jungleBarLiftToggle do
-                game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(-8678.05566, 14.5030098, 2089.25977))
-                game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", workspace.machinesFolder["Jungle Bar Lift"].interactSeat)
-                task.wait(0.1)
-            end
-        end)
-    end
-})
+createJungleMachineToggle(TabAutoWeight, "Bench", Vector3.new(-8629.88086, 64.8842468, 1855.03467))
+createJungleMachineToggle(TabAutoWeight, "Squat", Vector3.new(-8374.25586, 34.5933418, 2932.44995))
+createJungleMachineToggle(TabAutoWeight, "Lift", Vector3.new(-8678.05566, 14.5030098, 2089.25977))
 
 local Section = TabAutoWeight:CreateSection("Will add more stuff later")
-
-
-
-      
